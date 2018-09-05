@@ -10,7 +10,7 @@ jobs:
       - deploy:
           name: Deploy wp-update-server
           command: |
-            if [ ]; then
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "Deploying to server"
               cd ~/wp-update-server
               rm -r .*
