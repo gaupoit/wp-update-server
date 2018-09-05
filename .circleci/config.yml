@@ -7,7 +7,7 @@ jobs:
     working_directory: ~/wp-update-server
     steps:
       - checkout
-      - deploy
+      - deploy:
           name: Deploy wp-update-server
           command: |
             if [ ]; then
