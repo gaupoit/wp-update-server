@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: preventdirectaccess/pda-ci:0.0.1
+
+    working_directory: ~/wp-update-server
+    steps:
+      - checkout
+      - deploy
+          name: Deploy wp-update-server
+          command: |
+            if [ ]; then
+              echo "Deploying to server"
+              cd ~/wp-update-server
+              rm -r .*
+              rsync -atv -e "ssh -o StrictHostKeyChecking=no" . $SERVER
+            else
+              echo "Err! Not master branch."
+            fi
+
+
