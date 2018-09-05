@@ -13,7 +13,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "Deploying to server"
               cd ~/wp-update-server
-              rm -r .*
+              rm -r .git
               rsync -atv -e "ssh -o StrictHostKeyChecking=no" . $SERVER
             else
               echo "Err! Not master branch."
