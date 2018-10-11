@@ -423,6 +423,8 @@ class Wpup_UpdateServer {
 				'wp_version'        => isset($request->wpVersion) ? $request->wpVersion : '-',
 				'site_url'          => isset($request->wpSiteUrl) ? $request->wpSiteUrl : '-',
 				'query'             => http_build_query($request->query, '', '&'),
+				'token'             => $request->headers->get( 'Authorization' ),
+				'package'           => json_encode( $request->package ),
 			);
 			$columns = $this->filterLogInfo($columns, $request);
 			$columns = $this->escapeLogInfo($columns);
