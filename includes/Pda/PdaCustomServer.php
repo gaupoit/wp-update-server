@@ -46,7 +46,39 @@ class PdaCustomServer extends Wpup_UpdateServer {
 	 */
 	protected function checkAuthorization( $request ) {
 		$this->logRequest( $request );
-		//TODO: send the request to API to check if the license is valid.
-		exit();
+        $license = $request->headers->get( 'Authorization' );
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://cxi5bkbqw0.execute-api.ap-southeast-1.amazonaws.com/dev/services/licenses/check",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "{\n    \"license\": \"$license\"\n}",
+            CURLOPT_HTTPHEADER => array(
+                "Cache-Control: no-cache",
+                "Content-Type: application/json",
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            exit();
+        } else {
+            $result = json_decode( $response );
+            if ( $result->message === false ) {
+                exit();
+            }
+        }
+
 	}
 }
