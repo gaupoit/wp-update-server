@@ -47,11 +47,12 @@ class PdaCustomServer extends Wpup_UpdateServer {
 	protected function checkAuthorization( $request ) {
 		$this->logRequest( $request );
         $license = $request->headers->get( 'Authorization' );
+        $api = $request->headers->get( 'ApiCheckLicense' );
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://cxi5bkbqw0.execute-api.ap-southeast-1.amazonaws.com/dev/services/licenses/check",
+            CURLOPT_URL => $api,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
