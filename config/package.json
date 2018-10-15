@@ -1,0 +1,21 @@
+{
+  "name": "generator-server-config",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "yo server-config https://cxi5bkbqw0.execute-api.ap-southeast-1.amazonaws.com/dev/services/licenses/check b0g1PNxjbk1MBybXol3jQag0dRVM8LJz4VS86ICh"
+  },
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "files": [
+    "generators"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "yeoman-generator": "^3.1.1"
+  }
+}

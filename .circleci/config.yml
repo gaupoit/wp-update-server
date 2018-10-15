@@ -2,11 +2,38 @@ version: 2
 jobs:
   build:
     docker:
-      - image: preventdirectaccess/pda-ci:0.0.1
+      - image: preventdirectaccess/pda-ci:0.0.2
 
     working_directory: ~/wp-update-server
     steps:
       - checkout
+      - run:
+          name: Install yo
+          command: |
+            cd config
+            npm install
+            sudo npm link
+      - run:
+          name: Generate configuration
+          command: |
+            cd config
+            if [ "${CIRCLE_BRANCH}" == "feature/deploy_partially" ]; then
+              yo server-config $API_DEV $KEY_DEV
+            else
+              echo "Err! Not develop branch."
+            fi
+      - restore_cache:
+          keys:
+            - composer-cache-{{ checksum "composer.json" }}
+            - composer-cache-
+      - run:
+          name: Install dependencies
+          command: |
+            composer install
+      - save_cache:
+          key: composer-cache-{{ checksum "composer.json" }}
+          paths:
+            vendor
       - deploy:
           name: Deploy wp-update-server
           command: |

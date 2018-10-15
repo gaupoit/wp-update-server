@@ -1,3 +1,8 @@
 packages/*.zip
 cache/*.txt
 .idea
+request.log
+logs/log_*
+config/index.php
+node_modules
+vendor
