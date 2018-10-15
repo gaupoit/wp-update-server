@@ -2,3 +2,4 @@ packages/*.zip
 cache/*.txt
 .idea
 request.log
+logs/log_*
