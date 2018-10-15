@@ -7,6 +7,22 @@ jobs:
     working_directory: ~/wp-update-server
     steps:
       - checkout
+      - generator:
+          name: Install yo
+          command: |
+            npm install -g yo
+            cd config
+            npm install
+            npm link
+      - configuration:
+          name: Generate configuration
+          command: |
+            cd config
+            if [ "${CIRCLE_BRANCH}" == "feature/deploy_partially" ]; then
+              yo server-config $API_DEV $KEY_DEV
+            else
+              echo "Err! Not develop branch."
+            fi
       - deploy:
           name: Deploy wp-update-server
           command: |
