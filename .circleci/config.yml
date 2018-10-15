@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: estebanmatias92/yeoman:latest
+      - image: preventdirectaccess/pda-ci:0.0.2
 
     working_directory: ~/wp-update-server
     steps:
