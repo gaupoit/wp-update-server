@@ -23,6 +23,18 @@ jobs:
             else
               echo "Err! Not develop branch."
             fi
+      - restore_cache:
+          keys:
+            - composer-cache-{{ checksum "composer.json" }}
+            - composer-cache-
+      - run:
+          name: Install dependencies
+          command: |
+            composer install
+      - save_cache:
+          key: composer-cache-{{ checksum "composer.json" }}
+          paths:
+            vendor
       - deploy:
           name: Deploy wp-update-server
           command: |
