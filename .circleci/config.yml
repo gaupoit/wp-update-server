@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: preventdirectaccess/pda-ci:0.0.1
+      - image: docker pull exadatum/yeoman
 
     working_directory: ~/wp-update-server
     steps:
