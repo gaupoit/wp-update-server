@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: estebanmatias92/yeoman:latest
+      - image: aahoo/yeoman:latest
 
     working_directory: ~/wp-update-server
     steps:
