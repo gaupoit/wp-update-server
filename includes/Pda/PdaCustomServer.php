@@ -46,42 +46,47 @@ class PdaCustomServer extends Wpup_UpdateServer {
 	 * @param mixed $request Request object.
 	 */
 	protected function checkAuthorization( $request ) {
-		$this->logRequest( $request );
-		$license = $request->headers->get( 'Authorization' );
-		$curl    = curl_init();
-		$data = array(
-			'license' => $license,
-		);
-		curl_setopt_array( $curl, array(
-			CURLOPT_URL            => 'https://cxi5bkbqw0.execute-api.ap-southeast-1.amazonaws.com/dev/services/licenses/check',
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING       => '',
-			CURLOPT_MAXREDIRS      => 10,
-			CURLOPT_TIMEOUT        => 30,
-			CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-			CURLOPT_CUSTOMREQUEST  => 'POST',
-			CURLOPT_POSTFIELDS     => json_encode( $data ),
-			CURLOPT_HTTPHEADER     => array(
-				'Cache-Control: no-cache',
-				'Content-Type: application/json',
-				'X-API-KEY: b0g1PNxjbk1MBybXol3jQag0dRVM8LJz4VS86ICh',
-			),
-		) );
-		$log_dir  = dirname( __FILE ) . '/logs';
-		$logger   = new Katzgrau\KLogger\Logger( $log_dir );
-		$response = curl_exec( $curl );
-		$err      = curl_error( $curl );
-		$info = curl_getinfo( $curl );
-		curl_close( $curl );
-		if ( $err ) {
-			exit();
-		} else {
-			$logger->debug( $response );
-			$result = json_decode( $response );
-			if ( 200 !== $info['http_code'] || false === $result->message ) {
-				$logger->error( 'Response info: ' . json_encode( $info ) );
+		try {
+			$this->logRequest( $request );
+			$license = $request->headers->get( 'Authorization' );
+			$curl    = curl_init();
+			$data    = array(
+				'license' => $license,
+			);
+			$config  = require( __DIR__ . '/../../config/index.php' );
+			$log_dir = dirname( __FILE ) . '/logs';
+			$logger  = new Katzgrau\KLogger\Logger( $log_dir );
+			curl_setopt_array( $curl, array(
+				CURLOPT_URL            => $config['api'],
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING       => '',
+				CURLOPT_MAXREDIRS      => 10,
+				CURLOPT_TIMEOUT        => 30,
+				CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST  => 'POST',
+				CURLOPT_POSTFIELDS     => json_encode( $data ),
+				CURLOPT_HTTPHEADER     => array(
+					'Cache-Control: no-cache',
+					'Content-Type: application/json',
+					'X-API-KEY: ' . $config['key'],
+				),
+			) );
+			$response = curl_exec( $curl );
+			$err      = curl_error( $curl );
+			$info     = curl_getinfo( $curl );
+			curl_close( $curl );
+			if ( $err ) {
 				exit();
+			} else {
+				$logger->debug( $response );
+				$result = json_decode( $response );
+				if ( 200 !== $info['http_code'] || false === $result->message ) {
+					$logger->error( 'Response info: ' . json_encode( $info ) );
+					exit();
+				}
 			}
+		} catch ( Exception $ex ) {
+			$logger->error( wp_json_encode( $ex->getMessage() ) );
 		}
 	}
 }
