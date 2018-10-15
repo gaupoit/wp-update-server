@@ -7,14 +7,14 @@ jobs:
     working_directory: ~/wp-update-server
     steps:
       - checkout
-      - generator:
+      - run:
           name: Install yo
           command: |
             npm install -g yo
             cd config
             npm install
             npm link
-      - configuration:
+      - run:
           name: Generate configuration
           command: |
             cd config
