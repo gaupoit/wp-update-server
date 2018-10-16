@@ -37,6 +37,15 @@ jobs:
       - deploy:
           name: Deploy wp-update-server
           command: |
+            if [ "${CIRCLE_BRANCH}" == "feature/deploy_partially" ]; then
+              echo "Deploying to testing server"
+              cd ~/wp-update-server
+              rm -r .git
+              rsync -atv -e "ssh -o StrictHostKeyChecking=no" . $STAG_SERVER
+            else
+              echo "Err! Not develop branch."
+            fi
+
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "Deploying to server"
               cd ~/wp-update-server
