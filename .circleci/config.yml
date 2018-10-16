@@ -40,7 +40,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "feature/deploy_partially" ]; then
               echo "Deploying to testing server"
               cd ~/wp-update-server
-              rm -r .git
+              rm -rf .git
               rsync -atv -e "ssh -o StrictHostKeyChecking=no" . $STAG_SERVER
             else
               echo "Err! Not develop branch."
