@@ -59,7 +59,7 @@ class Wpup_UpdateServer {
 	 */
 	public static function guessServerUrl() {
 		$serverUrl = ( self::isSsl() ? 'https' : 'http' );
-		$serverUrl .= '://' . $_SERVER['HTTP_HOST'];
+//		$serverUrl .= '://' . $_SERVER['HTTP_HOST'];
 		$path = $_SERVER['SCRIPT_NAME'];
 
 		if ( basename($path) === 'index.php' ) {
