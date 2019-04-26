@@ -110,10 +110,17 @@ class PdaCustomServer extends Wpup_UpdateServer {
 				'body'       => '',
 			);
 		}
+		$body = $this->dispatch( $request );
+		if ( empty( $body ) ) {
+			return array(
+				'statusCode' => 404,
+				'body'       => '',
+			);
+		}
 
 		return array(
 			'statusCode' => 200,
-			'body'       => $this->dispatch( $request ),
+			'body'       => $body,
 		);
 	}
 
@@ -153,6 +160,7 @@ class PdaCustomServer extends Wpup_UpdateServer {
 			return $this->actionDownload( $request );
 		} else {
 			$this->exitWithError( sprintf( 'Invalid action "%s".', htmlentities( $request->action ) ), 400 );
+
 			return false;
 		}
 	}
@@ -168,7 +176,7 @@ class PdaCustomServer extends Wpup_UpdateServer {
 		$curl = curl_init();
 
 		curl_setopt_array( $curl, array(
-			CURLOPT_URL            => $this->config['metadata_url'] .'/'. $slug . '/meta_data.json',
+			CURLOPT_URL            => $this->config['metadata_url'] . '/' . $slug . '/meta_data.json',
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING       => "",
 			CURLOPT_MAXREDIRS      => 10,
@@ -198,10 +206,13 @@ class PdaCustomServer extends Wpup_UpdateServer {
 	 *
 	 * @param Wpup_Request $request
 	 *
-	 * @return object
+	 * @return object|bool
 	 */
 	protected function actionGetMetadata( Wpup_Request $request ) {
-		$meta_data                       = json_decode( $this->getMetaDataFromS3( $request->slug ) );
+		$meta_data = json_decode( $this->getMetaDataFromS3( $request->slug ) );
+		if ( empty( $meta_data ) ) {
+			return false;
+		}
 		$meta_data_array                 = (array) $meta_data;
 		$meta_data_array['download_url'] = $this->config['download_url'] . $request->slug;
 
